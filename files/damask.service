@@ -1,0 +1,19 @@
+[Unit]
+Description=DAMASK project
+
+[Service]
+ExecStart=/bin/sh /opt/damask/damask.sh
+ExecStop=/bin/kill -s SIGTERM $MAINPID
+Type=forking
+PIDFile=/opt/damask/damask.pid
+Restart=always
+RestartSec=5s
+KillMode=control-group
+WorkingDirectory=/opt/damask/
+
+User=damask
+Group=damask
+
+[Install]
+WantedBy=multi-user.target
+
