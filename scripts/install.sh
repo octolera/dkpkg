@@ -95,11 +95,9 @@ check_java_remote() {
 #    ssh -o StrictHostKeyChecking=no -i "$private_key_path" -p "$port" "astra@$server" 'bash -s' <<ENDSSH
     echo "Выполнение команды на сервере \$(hostname)"
     if ! command -v java &> /dev/null; then
-        echo "Java не установлена. Копирование и установка Java 11..."
-        exit 1  # Java не установлена
+        echo "Java не установлена. Копирование и установка Java 11..."       
     else
         echo "Java уже установлена."
-        exit 0  # Java установлена
     fi
 #ENDSSH
 
