@@ -182,8 +182,8 @@ check_keytool_remote() {
 
 #функций для обработки всех серверов
 
-check_java_remote
-check_keytool_remote 
+#check_java_remote
+#check_keytool_remote 
 configure_system_limits 
 check_create_damask_directory 
 # Генерация ключа для шифрования данных на диске в хранилище
