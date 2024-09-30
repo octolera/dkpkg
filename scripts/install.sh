@@ -327,8 +327,8 @@ setup_damask_service() {
         sudo systemctl restart damask.service
     else
         echo 'Файл damask.service отсутствует'
-        if [ -f '/tmp/damask.service' ]; then
-            sudo cp /tmp/damask.service /etc/systemd/system/damask.service
+        if [ -f '../files/damask.service' ]; then
+            sudo cp ../files/damask.service /etc/systemd/system/damask.service
             sudo systemctl enable damask.service
             sudo systemctl start damask.service
         else
