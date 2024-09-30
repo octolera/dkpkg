@@ -103,7 +103,7 @@ check_java_remote() {
     fi
 #ENDSSH
 
-    if [[ $? -ne 0 ]]; then
+    if ! command -v java &> /dev/null;  then
         echo "Копирование файла"
         cp "$java_package_path" "$remote_java_package_path"
         
