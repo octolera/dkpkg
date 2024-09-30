@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 # Путь к локальному файлу java openjdk для установки на сервер
@@ -203,7 +202,7 @@ for i in "${!node_ips[@]}"; do
 
     # Экспорт публичного сертификата из сгенерированного файла
     keytool -export -alias "$node_name" -keystore "$node_alias.p12" -file "$node_name.cer" -storepass "$cert_pass"
-
+done
 copy_files() {
     #local server=$1
     #local port=$2
