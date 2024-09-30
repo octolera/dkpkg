@@ -1,20 +1,6 @@
 
 #!/bin/bash
 
-#set -x
-
-# IP серверов astra linux
-servers=("83.166.238.205")
-
-# Путь к приватному ключу 
-private_key_path="/home/dmitriy/Загрузки/astra-test1-a4J6Mfa5.pem"
-
-# Порты для подключения
-ports=("22")
-
-# Юзер для подключения
-users=("astra")
-
 # Путь к локальному файлу java openjdk для установки на сервер
 java_package_path="../files/openlogic-openjdk-11.0.18+10-linux-x64-deb.deb"
 
@@ -160,23 +146,6 @@ check_keytool_remote() {
     highlight_message "Проверка keytool на сервере astra@$server завершена"
 }
 
-# Генерация ключа для шифрования данных на диске в хранилище
-keytool -genseckey -alias damask.master.key -keystore master.p12 -storetype PKCS12 -keyalg aes -storepass "$disk_pass" -keysize 256
-
-# Генерация ключа для шифрования данных JWT токенов
-keytool -genkey -dname "CN=test, OU=test, O=test, L=test, ST=test, C=test" -keyalg RSA -alias damask.oauth.jwt -keystore damask.p12 -storepass "$jwt_pass" -keypass "$jwt_pass"
-
-# Генерация сертификатов и конфигурационных файлов для каждого узла
-IFS=',' read -ra node_ips <<< "$node_addresses"
-for i in "${!node_ips[@]}"; do
-    node_name="Node$((i+1))"
-    node_alias="$(echo "$node_name" | tr '[:upper:]' '[:lower:]')"
-
-    # Генерация сертификата для текущего узла
-    keytool -genkey -keystore "$node_alias.p12" -keyalg RSA -validity 365 -storepass "$cert_pass" -keypass "$cert_pass" -alias "$node_name" -dname "CN=$node_name" -storetype pkcs12
-
-    # Экспорт публичного сертификата из сгенерированного файла
-    keytool -export -alias "$node_name" -keystore "$node_alias.p12" -file "$node_name.cer" -storepass "$cert_pass"
 
 #    # Создание конфигурационного файла для всех узлов кластера
 #    cat > "damask$((i+1)).properties" <<EOF
@@ -219,6 +188,23 @@ check_java_remote
 check_keytool_remote 
 configure_system_limits 
 check_create_damask_directory 
+# Генерация ключа для шифрования данных на диске в хранилище
+keytool -genseckey -alias damask.master.key -keystore master.p12 -storetype PKCS12 -keyalg aes -storepass "$disk_pass" -keysize 256
+
+# Генерация ключа для шифрования данных JWT токенов
+keytool -genkey -dname "CN=test, OU=test, O=test, L=test, ST=test, C=test" -keyalg RSA -alias damask.oauth.jwt -keystore damask.p12 -storepass "$jwt_pass" -keypass "$jwt_pass"
+
+# Генерация сертификатов и конфигурационных файлов для каждого узла
+IFS=',' read -ra node_ips <<< "$node_addresses"
+for i in "${!node_ips[@]}"; do
+    node_name="Node$((i+1))"
+    node_alias="$(echo "$node_name" | tr '[:upper:]' '[:lower:]')"
+
+    # Генерация сертификата для текущего узла
+    keytool -genkey -keystore "$node_alias.p12" -keyalg RSA -validity 365 -storepass "$cert_pass" -keypass "$cert_pass" -alias "$node_name" -dname "CN=$node_name" -storetype pkcs12
+
+    # Экспорт публичного сертификата из сгенерированного файла
+    keytool -export -alias "$node_name" -keystore "$node_alias.p12" -file "$node_name.cer" -storepass "$cert_pass"
 
 copy_files() {
     #local server=$1
