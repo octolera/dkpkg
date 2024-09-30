@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # Путь к локальному файлу java openjdk для установки на сервер
 java_package_path="../files/openlogic-openjdk-11.0.18+10-linux-x64-deb.deb"
 
@@ -242,7 +241,7 @@ copy_optional_files() {
 
     echo "Проверка наличия дополнительных файлов на серверах"
 
-    for i in "${!servers[@]}"; do
+    #for i in "${!servers[@]}"; do
         #server=${servers[$i]}
         #port=${ports[$i]}
         #user=${users[$i]}
@@ -274,7 +273,7 @@ copy_optional_files() {
         #        echo "Файл $(basename $file) уже присутствует. Пропуск копирования."
           #  fi
         done
-    done
+  #  done
 
     echo "Копирование дополнительных файлов завершено"
 }
@@ -282,7 +281,7 @@ copy_optional_files() {
 copy_service_file() {
   #  local servers=("${!1}")
   #  local ports=("${!2}")
-  #  local users=("${!3}")
+  #  local users=>("${!3}")
 
     echo "Копирование файла damask.service в директорию /tmp"
 
@@ -346,19 +345,19 @@ setup_damask_service() {
 #    port=${ports[$i]}
 #    user=${users[$i]}
 #
-    echo "Проверка наличия файла damask.service"
+echo "Проверка наличия файла damask.service"
 
     # Проверка наличия файла на сервере перед выполнением настройки
  #   ssh -o StrictHostKeyChecking=no -i "$private_key_path" -p "$port" "$user@$server" <<EOF
-    if [ ! -f '/etc/systemd/system/damask.service' ]; then
-        echo 'Файл damask.service отсутствует. Необходимо скопировать файл в /tmp.'
-        exit 1
-    else
-        echo 'Файл damask.service уже присутствует. Пропуск копирования.'
-    fi
+if [ ! -f '/etc/systemd/system/damask.service' ]; then
+    echo 'Файл damask.service отсутствует. Необходимо скопировать файл в /tmp.'
+    exit 1
+else
+    echo 'Файл damask.service уже присутствует. Пропуск копирования.'
+fi
 #EOF
 
     # Вызов функции для установки и настройки damask.service на текущем сервере
-    setup_damask_service # "$server" "$port" "$user"
+setup_damask_service # "$server" "$port" "$user"
 #done
 
