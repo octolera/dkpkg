@@ -258,7 +258,7 @@ copy_optional_files() {
                 echo "Файл \$file уже присутствует на сервере"
             fi
         done
-ENDSSH
+#ENDSSH
 
         for file in "${files_to_copy[@]}"; do
       #      if ! ssh -o StrictHostKeyChecking=no -i "$private_key_path" -p "$port" "$user@$server" "[[ -e /opt/damask/$(basename $file) ]]"; then
