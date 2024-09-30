@@ -271,8 +271,8 @@ ENDSSH
                 sudo chown $user:damask "/opt/damask/$(basename $file)"
                 sudo chmod 770 "/opt/damask/$(basename $file)"
 #EOF
-            else
-                echo "Файл $(basename $file) уже присутствует. Пропуск копирования."
+       #     else
+        #        echo "Файл $(basename $file) уже присутствует. Пропуск копирования."
             fi
         done
     done
