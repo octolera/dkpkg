@@ -273,7 +273,7 @@ ENDSSH
 #EOF
        #     else
         #        echo "Файл $(basename $file) уже присутствует. Пропуск копирования."
-            fi
+          #  fi
         done
     done
 
