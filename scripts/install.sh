@@ -199,6 +199,7 @@ copy_optional_files() {
    # local servers=("${!1}")
    # local ports=("${!2}")
    # local users=("${!3}")
+   cp *properties /opt/damask
    cp *p12 /opt/damask
    cp *cer /opt/damask
     local files_to_copy=("$damask_sh_path" "$damask_sync_api_path")
@@ -271,52 +272,4 @@ copy_service_file #servers[@] ports[@] users[@]
 # Вызов функции для копирования файлов на все сервера
 # Вызов функции с передачей массивов
 copy_optional_files ##servers[@] ports[@] users[@]
-
-setup_damask_service() {
-#    local server=$1
-#    local port=$2
-#    local remote_user=$3
-#
-#    echo "Проверка наличия файла damask.service на сервере $user@$server"
-#
-#    ssh -o StrictHostKeyChecking=no -i "$private_key_path" -p "$port" "astra@$server" <<'ENDSSH'
-    if [ -f '/etc/systemd/system/damask.service' ]; then
-        echo 'Файл damask.service уже присутствует. Перезапуск сервиса.'
-        sudo systemctl restart damask.service
-    else
-        echo 'Файл damask.service отсутствует'
-        if [ -f '../files/damask.service' ]; then
-            sudo cp ../files/damask.service /etc/systemd/system/damask.service
-            sudo systemctl enable damask.service
-            sudo systemctl start damask.service
-        else
-            echo 'Ошибка: Файл /tmp/damask.service не найден.'
-            exit 1
-        fi
-    fi
-    echo 'Настройка файла damask.service завершена.'
-#ENDSSH
-}
-
-# Цикл для вызова функции setup_damask_service для каждого сервера
-#for i in "${!servers[@]}"; do
-#    server=${servers[$i]}
-#    port=${ports[$i]}
-#    user=${users[$i]}
-#
-echo "Проверка наличия файла damask.service"
-
-    # Проверка наличия файла на сервере перед выполнением настройки
- #   ssh -o StrictHostKeyChecking=no -i "$private_key_path" -p "$port" "$user@$server" <<EOF
-if [ ! -f '/etc/systemd/system/damask.service' ]; then
-    echo 'Файл damask.service отсутствует. Необходимо скопировать файл в /tmp.'
-    exit 1
-else
-    echo 'Файл damask.service уже присутствует. Пропуск копирования.'
-fi
-#EOF
-
-    # Вызов функции для установки и настройки damask.service на текущем сервере
-setup_damask_service # "$server" "$port" "$user"
-#done
 
