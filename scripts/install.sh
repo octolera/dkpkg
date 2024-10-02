@@ -199,7 +199,7 @@ copy_optional_files() {
    # local servers=("${!1}")
    # local ports=("${!2}")
    # local users=("${!3}")
-   cp ..files/damask.properties /opt/damask
+   cp ../files/damask.properties /opt/damask
    cp *p12 /opt/damask
    cp *cer /opt/damask
     local files_to_copy=("$damask_sh_path" "$damask_sync_api_path")
