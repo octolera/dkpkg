@@ -139,7 +139,7 @@ check_keytool_remote() {
     fi
     echo "Выполнение команды завершено"
 #ENDSSH
-    highlight_message "Проверка keytool на сервере astra@$server завершена"
+ #   highlight_message "Проверка keytool на сервере astra@$server завершена"
 }
 
 #check_java_remote
@@ -204,7 +204,7 @@ copy_optional_files() {
    cp *cer /opt/damask
     local files_to_copy=("$damask_sh_path" "$damask_sync_api_path")
 
-    echo "Проверка наличия дополнительных файлов на серверах"
+    
 
     #for i in "${!servers[@]}"; do
         #server=${servers[$i]}
@@ -214,13 +214,7 @@ copy_optional_files() {
         #echo "Проверка на сервере astra@$server"
         #
         #ssh -o StrictHostKeyChecking=no -i "$private_key_path" -p "$port" "$user@$server" 'bash -s' <<ENDSSH
-        for file in /opt/damask/damask.sh /opt/damask/damask_sync_api-1.0.jar; do
-            if [ ! -e "\$file" ]; then
-                echo "Файл \$file отсутствует на сервере "
-            else
-                echo "Файл \$file уже присутствует на сервере"
-            fi
-        done
+
 #ENDSSH
 
         for file in "${files_to_copy[@]}"; do
