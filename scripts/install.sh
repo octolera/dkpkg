@@ -64,7 +64,7 @@ check_create_damask_directory() {
     if [ ! -d "/opt/damask" ]; then
         echo "Директория /opt/damask не существует. Создание..."
         sudo mkdir -p /opt/damask
-        sudo chown 'astra':damask /opt/damask
+        sudo chown -R 'astra':astra /opt/damask
         sudo chmod 770 /opt/damask
     else
         echo "Директория /opt/damask уже существует."
@@ -73,7 +73,7 @@ check_create_damask_directory() {
     if [ ! -d "/opt/data" ]; then
         echo "Директория /opt/data не существует. Создание..."
         sudo mkdir -p /opt/data
-        sudo chown 'astra':damask /opt/data
+        sudo chown -R 'astra':astra /opt/data
         sudo chmod 770 /opt/data
     else
         echo "Директория /opt/data уже существует."
@@ -142,44 +142,6 @@ check_keytool_remote() {
     highlight_message "Проверка keytool на сервере astra@$server завершена"
 }
 
-
-#    # Создание конфигурационного файла для всех узлов кластера
-#    cat > "damask$((i+1)).properties" <<EOF
-#spring.task.scheduling.pool.size=10
-#license.customerid=7700000000
-#
-#app.security.jwt.keystore-location=/opt/damask/damask.p12
-#app.security.jwt.keystore-password=$jwt_pass
-#app.security.jwt.key-alias=damask.oauth.jwt
-#app.security.jwt.private-key-passphrase=$jwt_pass
-#app.jwtExpirationInMs=864000001
-#app.jwtSecret=JWTSuperSecretKey
-#
-#damask.security.refresh_token_expiration=30
-#damask.workDirectory=/opt/data
-#damask.instanceName=$node_name
-#damask.security.nodeStore=/opt/damask/$node_alias.p12
-#damask.security.nodePassword=$cert_pass
-#damask.security.trustPassword=$cert_pass
-#damask.security.masterStore=/opt/damask/master.p12
-#damask.security.masterPassword=$disk_pass
-#damask.network.nodeAddresses=$node_addresses
-#logging.file.name=damask_core.log
-#damask.security.masterKeyName=damask.master.key
-#EOF
-#done
-
-# Импорт сертификатов других узлов в хранилище доверенных сертификатов каждого узла
-#for i in "${!node_ips[@]}"; do
-#    for j in "${!node_ips[@]}"; do
-#        if [ $i -ne $j ]; then
-#            keytool -import -keystore "trust$((i+1)).p12" -alias "node$((j+1))" -file "Node$((j+1)).cer" -storepass "$cert_pass" -noprompt
-#        fi
-#    done
-#done
-
-#функций для обработки всех серверов
-
 #check_java_remote
 #check_keytool_remote 
 configure_system_limits 
@@ -237,6 +199,8 @@ copy_optional_files() {
    # local servers=("${!1}")
    # local ports=("${!2}")
    # local users=("${!3}")
+   cp *p12 /opt/damask
+   cp *cer /opt/damask
     local files_to_copy=("$damask_sh_path" "$damask_sync_api_path")
 
     echo "Проверка наличия дополнительных файлов на серверах"
@@ -266,7 +230,7 @@ copy_optional_files() {
                 # Изменение владельца и прав доступа после копирования
                 echo "Изменение владельца и прав доступа для файла $(basename $file)"
              #   ssh -o StrictHostKeyChecking=no -i "$private_key_path" -p "$port" "$user@$server" <<EOF
-                sudo chown $user:damask "/opt/damask/$(basename $file)"
+                sudo chown $user:$user "/opt/damask/$(basename $file)"
                 sudo chmod 770 "/opt/damask/$(basename $file)"
 #EOF
        #     else
@@ -303,12 +267,7 @@ copy_service_file #servers[@] ports[@] users[@]
 #for i in "${!servers[@]}"; do
 #    server=${servers[$i]}
 #    port=${ports[$i]}
-#    user=${users[$i]}
-    node_index=1
-    
-    copy_files "master.p12" "damask.p12" "damask$node_index.properties" "node$node_index.p12" "trust$node_index.p12"
-#done
-
+#    user=${users[$i]
 # Вызов функции для копирования файлов на все сервера
 # Вызов функции с передачей массивов
 copy_optional_files ##servers[@] ports[@] users[@]
